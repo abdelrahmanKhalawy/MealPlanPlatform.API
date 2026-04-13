@@ -11,7 +11,6 @@ namespace MealPlanPlatform.API.Data
         public DbSet<UserHealthProfile> UserHealthProfiles { get; set; }
         public DbSet<MealPlan> MealPlans { get; set; }
         public DbSet<Subscription> Subscriptions { get; set; }
-        public DbSet<Coach> Coaches { get; set; }
         public DbSet<UserCoach> UserCoaches { get; set; }
         public DbSet<Progress> Progresses { get; set; }
         public DbSet<Food> Foods { get; set; }
@@ -47,15 +46,18 @@ namespace MealPlanPlatform.API.Data
                 .HasForeignKey(p => p.UserId);
 
             // UserCoach (Many to Many bridge)
+            // Coach is represented by a User record with Role = "Coach"
             modelBuilder.Entity<UserCoach>()
-                .HasOne(uc => uc.User)
+                .HasOne<User>(uc => uc.User)
                 .WithMany(u => u.UserCoaches)
-                .HasForeignKey(uc => uc.UserId);
+                .HasForeignKey(uc => uc.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<UserCoach>()
-                .HasOne(uc => uc.Coach)
-                .WithMany(c => c.UserCoaches)
-                .HasForeignKey(uc => uc.CoachId);
+                .HasOne<User>(uc => uc.Coach)
+                .WithMany(u => u.CoachAssignments)
+                .HasForeignKey(uc => uc.CoachId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

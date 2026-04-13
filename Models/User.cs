@@ -15,5 +15,6 @@ namespace MealPlanPlatform.API.Models
         public ICollection<Subscription> Subscriptions { get; set; } = new List<Subscription>();
         public ICollection<Progress> ProgressRecords { get; set; } = new List<Progress>();
         public ICollection<UserCoach> UserCoaches { get; set; } = new List<UserCoach>();
+        public ICollection<UserCoach> CoachAssignments { get; set; } = new List<UserCoach>();
     }
 }

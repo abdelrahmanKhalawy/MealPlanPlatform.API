@@ -9,6 +9,6 @@ namespace MealPlanPlatform.API.Models
         public User User { get; set; } = null!;
 
         public int CoachId { get; set; }
-        public Coach Coach { get; set; } = null!;
+        public User Coach { get; set; } = null!; // Coach is a User with Role = "Coach"
     }
 }

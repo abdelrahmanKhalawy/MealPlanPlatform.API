@@ -4,6 +4,7 @@ using MealPlanPlatform.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MealPlanPlatform.API.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260412233328_FixUserCoachRelation")]
+    partial class FixUserCoachRelation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,6 +24,26 @@ namespace MealPlanPlatform.API.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("MealPlanPlatform.API.Models.Coach", b =>
+                {
+                    b.Property<int>("CoachId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CoachId"));
+
+                    b.Property<string>("Bio")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ExperienceLevel")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("CoachId");
+
+                    b.ToTable("Coaches");
+                });
 
             modelBuilder.Entity("MealPlanPlatform.API.Models.Food", b =>
                 {
@@ -306,16 +329,16 @@ namespace MealPlanPlatform.API.Migrations
 
             modelBuilder.Entity("MealPlanPlatform.API.Models.UserCoach", b =>
                 {
-                    b.HasOne("MealPlanPlatform.API.Models.User", "Coach")
-                        .WithMany("CoachAssignments")
+                    b.HasOne("MealPlanPlatform.API.Models.Coach", "Coach")
+                        .WithMany("UserCoaches")
                         .HasForeignKey("CoachId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("MealPlanPlatform.API.Models.User", "User")
                         .WithMany("UserCoaches")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Coach");
@@ -334,10 +357,13 @@ namespace MealPlanPlatform.API.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("MealPlanPlatform.API.Models.Coach", b =>
+                {
+                    b.Navigation("UserCoaches");
+                });
+
             modelBuilder.Entity("MealPlanPlatform.API.Models.User", b =>
                 {
-                    b.Navigation("CoachAssignments");
-
                     b.Navigation("HealthProfile");
 
                     b.Navigation("MealPlans");

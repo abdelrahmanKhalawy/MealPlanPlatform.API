@@ -14,6 +14,8 @@ builder.Services.AddHttpClient();
 builder.Services.AddScoped<UsdaSeederService>();
 builder.Services.AddScoped<MealPlanService>();
 builder.Services.AddScoped<ProgressService>();
+builder.Services.AddScoped<AdminService>();
+builder.Services.AddScoped<CoachService>();
 
 // DbContext
 builder.Services.AddDbContext<AppDbContext>(options =>
